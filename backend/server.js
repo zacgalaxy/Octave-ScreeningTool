@@ -90,7 +90,7 @@ app.post('/api/insert-financial-data', async (req, res) => {
 /**
  * API endpoint to return the financial data from the database
  * 
- * Example usage: /api/get-financial-data?country=USA&industry=Financials
+ * Example usage: localhost:8000/api/get-financial-data?country=USA&industry=Financials
  * 
  * Currently applicable to the North America region only
  */
