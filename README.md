@@ -17,7 +17,7 @@ You need `node` and `npm` installed globally on your machine.
 Go to the `frontend` folder, and run `npm i` to install all the requisite packages needed for the front-end setup.
 
 ### Running the Back-end
-Go to the `backend` folder, and run `npm install` to install all the requisite packages needed for the front-end setup.
+Go to the `backend` folder, and run `npm install` to install all the requisite packages needed for the back-end setup.
 
 ### Working Instructions
 - Always pull from the main branch before creating your feature branch to start work.
