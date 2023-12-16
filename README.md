@@ -8,13 +8,16 @@
 The online platform for Octave.
 
 ## Getting Started
-These instructions will get the React front-end and Django backend up and running on your local machine.
+These instructions will get the React front-end and Node.js/Express backend up and running on your local machine.
 
 ### Prerequisites
-You need `node`, `npm` and `pip` installed globally on your machine.
+You need `node` and `npm` installed globally on your machine.
 
 ### Running the Front-end
 Go to the `frontend` folder, and run `npm i` to install all the requisite packages needed for the front-end setup.
+
+### Running the Back-end
+Go to the `backend` folder, and run `npm install` to install all the requisite packages needed for the front-end setup.
 
 ### Working Instructions
 - Always pull from the main branch before creating your feature branch to start work.
