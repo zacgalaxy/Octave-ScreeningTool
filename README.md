@@ -14,7 +14,7 @@ These instructions will get the React front-end and Node.js/Express backend up a
 You need `node` and `npm` installed globally on your machine.
 
 ### Running the Front-end
-Go to the `frontend` folder, and run `npm i` to install all the requisite packages needed for the front-end setup.
+Go to the `frontend` folder, and run `npm i` to install all the requisite packages needed for the front-end setup. Set REACT_APP_ENV environment variable to control config. (REACT_APP_ENV=dev npm run)
 
 ### Running the Back-end
 Go to the `backend` folder, and run `npm install` to install all the requisite packages needed for the back-end setup. Before you start the server, you need to create a `.env` file in the backend folder with the parameters `MONGO_URI = <The connection Link>`. After that, to start the server, run `npm start` to start the server and visit the website at localhost:8000
