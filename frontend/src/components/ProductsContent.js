@@ -22,6 +22,10 @@ const ProductsContent = ({ }) => {
 
 
     return (
+        <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'column' }}>
+        <Typography variant="h5" component="h2" style={{ fontWeight: 'bold', margin: theme.spacing(2) }}>
+                Portfolio Analytics
+            </Typography>
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
         {cardsData.map(card => (
             <ButtonBase 
@@ -46,6 +50,7 @@ const ProductsContent = ({ }) => {
                 </Card>
             </ButtonBase>
         ))}
+    </div>
     </div>
     );
 }

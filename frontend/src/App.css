@@ -1,1 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
 
+:root {
+    --bg-color: #f6f6f9;
+    --active-text-icon-color:  #6F9CDE
+}
+
+
+.greyBackground {
+    background-color: var(--bg-color); 
+}
+
+
+.customDrawer .MuiDrawer-paper {
+    width: 215px;
+    margin: 20px;
+    height: 94vh;
+    border-radius: 15px; 
+    box-sizing: border-box;
+    box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+.menuItem {
+    font-weight: 500; 
+}
+
+.menuItem.active {
+    background-color: var(--bg-color);
+    color: var(--active-text-icon-color);
+}
+
+.menuItem .material-icons, .menuItem.active .material-icons {
+    color: inherit;  
+}
+
+.activeListItem::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%); /* Center vertically */
+    height: 45%; /* Adjust for lesser height */
+    width: 6px; /* Increased width for more thickness */
+    background-color: var(--active-text-icon-color); /* Same color as the text */
+}
+
+.drawerButton {
+    width: 80%; 
+}
+
+.autoMarginBox {
+    margin-top: auto;
+    margin-bottom: 10px;
+    padding: 8px; 
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center;
+}

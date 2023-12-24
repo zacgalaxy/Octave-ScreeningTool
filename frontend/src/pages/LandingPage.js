@@ -1,17 +1,42 @@
 import React, {useEffect, useState} from 'react';
-import { Button, Box, Drawer, List, ListItem, ListItemButton, ListItemText, useTheme } from '@mui/material';
+import { Button, Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, useTheme } from '@mui/material';
+import { grey } from '@mui/material/colors';
 import PageTemplate from "./PageTemplate";
 import { Navigate } from 'react-router-dom';
 import ProductsContent from "../components/ProductsContent";
 // const api = require('../api');
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import SettingsIcon from '@mui/icons-material/Settings';
+import AutoGraphIcon from '@mui/icons-material/AutoGraph';
+import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
+import CategoryIcon from '@mui/icons-material/Category';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const menuItems = [
     "Home",
-    "Portfolio Analytics",
+    "Analytics",
     "Products",
     "Reports",
     "Settings",
   ];
+
+
+  const getIcon = (menuItem) => {
+    switch (menuItem) {
+        case 'Home':
+            return <DashboardIcon />;
+        case 'Analytics':
+            return <AutoGraphIcon />;
+        case 'Products':
+            return <CategoryIcon />;
+        case 'Reports':
+            return <ReportGmailerrorredIcon />;
+        case 'Settings':
+            return <SettingsIcon />;
+        default:
+            return <DashboardIcon />; 
+    }
+};
   
 const LandingPage = props => {
     const [redirect, setRedirect] = useState(false)
@@ -33,8 +58,8 @@ const LandingPage = props => {
         switch (activeMenu) {
           case "Home":
             return <div>Home Content</div>;
-          case "Portfolio Analytics":
-            return <div>Portfolio Analytics Content</div>;
+          case "Analytics":
+            return <div>Analytics Content</div>;
           case "Products":
             return <ProductsContent />;
           case "Reports":
@@ -49,13 +74,16 @@ const LandingPage = props => {
 
 
     return (
-    <PageTemplate nameofbackground="whiteBackground">
-        return (
-            <Box sx={{ display: 'flex' }}>
+    <PageTemplate nameofbackground="greyBackground">
+            <Box sx={{ display: 'flex'  }}>
             <Drawer
                 variant="permanent"
                 anchor="left"
-                sx={{ width: 240, flexShrink: 0, '& .MuiDrawer-paper': { width: 240, boxSizing: 'border-box' } }}>
+                className="customDrawer"
+                sx={{ 
+                  width: 240, 
+                  flexShrink: 0
+                }}>
                   <Box
                         component="img"
                         src="/images/logo.jpeg"
@@ -66,28 +94,27 @@ const LandingPage = props => {
 
                 <List>
                 {menuItems.map((text) => (
-                    <ListItem key={text} disablePadding>
-                    <ListItemButton onClick={() => setActiveMenu(text)} sx={{ 
-                                        backgroundColor: activeMenu === text ? theme.palette.primary.main : 'inherit',
-                                        color: activeMenu === text ? theme.palette.primary.contrastText : 'inherit',
-                                        '&:hover': {
-                                            backgroundColor: activeMenu === text ? theme.palette.primary.dark : 'inherit',
-                                            color: activeMenu === text ? theme.palette.primary.contrastText : 'inherit',
-                                        },
-                                    }}>
-                        <ListItemText primary={text} />
+                    <ListItem key={text} disablePadding sx={{ color: grey[500] }} >
+                    <ListItemButton onClick={() => setActiveMenu(text)} 
+                                    className={`menuItem ${activeMenu === text ? 'active' : ''}`}
+                                    >
+                        <ListItemIcon primary={text} className={`menuItem ${activeMenu === text ? 'active activeListItem' : ''}`}>
+                            {getIcon(text)}
+                        </ListItemIcon>
+                        <ListItemText primary={text}  />
                     </ListItemButton>
                     </ListItem>
                 ))}
                 </List>
 
-                <Box sx={{ marginTop: 'auto', p: 1 }}>
+                <Box  className="autoMarginBox">
                         <Button
                             variant="contained"
                             color="primary"
                             onClick={() => {/* handle logout logic */}}
-                            sx={{ width: '100%' }}
+                            className="drawerButton"
                         >
+                           <LogoutIcon sx={{ mr: 1 }} />
                             Logout
                         </Button>
                     </Box>
@@ -97,7 +124,6 @@ const LandingPage = props => {
                 {renderContent()}
             </Box>
             </Box>
-        );
     </PageTemplate>
 );}
 

@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 // import HeaderBar from "../components/general/HeaderBar";
 // import FallbackComponent from '../components/general/FallbackComponent';
 
-const PageTemplate = ({ content, children, nameofbackground = "", displayHeader = false,  ...rest}) => {
+const PageTemplate = ({ content, children, nameofbackground = "greyBackground", displayHeader = false,  ...rest}) => {
 
     // Enable dynamic backgrounds for tools like screening tool with custom CSS
     // if( nameofbackground === "" ){nameofbackground = "texturedBackground";}

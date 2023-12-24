@@ -9,6 +9,9 @@ const theme = createTheme({
       main: '#7C89A1', // cool-gray
     },
   },
+  typography: {
+    fontFamily: "'Poppins', sans-serif",
+  },
 });
 
 export default theme;
