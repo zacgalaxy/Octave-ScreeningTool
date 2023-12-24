@@ -4,6 +4,7 @@ import { grey } from '@mui/material/colors';
 import PageTemplate from "./PageTemplate";
 import { Navigate } from 'react-router-dom';
 import ProductsContent from "../components/ProductsContent";
+import ScreeningTool from './ScreeningTool';
 // const api = require('../api');
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -11,6 +12,8 @@ import AutoGraphIcon from '@mui/icons-material/AutoGraph';
 import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
 import CategoryIcon from '@mui/icons-material/Category';
 import LogoutIcon from '@mui/icons-material/Logout';
+import meifImage from '../images/meif.jpg'
+import { Routes, Route, Link, useLocation } from 'react-router-dom';
 
 const menuItems = [
     "Home",
@@ -39,39 +42,19 @@ const menuItems = [
 };
   
 const LandingPage = props => {
-    const [redirect, setRedirect] = useState(false)
+    const [redirect, setRedirect] = useState(false);
+    const location = useLocation();
     const [activeMenu, setActiveMenu] = useState(menuItems[2]);
     const theme = useTheme();
 
     useEffect(()=>{
-        // api.get("AUTH VALIDATION ENDPOINT HERE").then(async response=>{
-        //     if(response.status === 200) setRedirect(true)
-        // })
-        // .catch(e=> setRedirect(true))
-        
+        const path = location.pathname.split('/')[1];
+        if (menuItems.map(item => item.toLowerCase()).includes(path)) {
+            setActiveMenu(path.charAt(0).toUpperCase() + path.slice(1));      
     }
-        , [])
+    }, [location]);
     
     if(redirect) return (<Navigate to="/" /> )  
-
-    const renderContent = () => {
-        switch (activeMenu) {
-          case "Home":
-            return <div>Home Content</div>;
-          case "Analytics":
-            return <div>Analytics Content</div>;
-          case "Products":
-            return <ProductsContent />;
-          case "Reports":
-            return <div>Reports Content</div>;
-          case "Settings":
-            return <div>Settings Content</div>;
-          default:
-            return <div>Welcome!</div>;
-        }
-      };
-    
-
 
     return (
     <PageTemplate nameofbackground="greyBackground">
@@ -86,7 +69,7 @@ const LandingPage = props => {
                 }}>
                   <Box
                         component="img"
-                        src="/images/logo.jpeg"
+                        src={meifImage}
                         sx={{
                             height: 100, width: '100%', objectFit: 'contain', marginTop: 2
                         }}
@@ -95,14 +78,15 @@ const LandingPage = props => {
                 <List>
                 {menuItems.map((text) => (
                     <ListItem key={text} disablePadding sx={{ color: grey[500] }} >
-                    <ListItemButton onClick={() => setActiveMenu(text)} 
-                                    className={`menuItem ${activeMenu === text ? 'active' : ''}`}
+                       <Link to={`/${text.toLowerCase()}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <ListItemButton className={`menuItem ${activeMenu.toLowerCase() === text.toLowerCase() ? 'active' : ''}`}
                                     >
                         <ListItemIcon primary={text} className={`menuItem ${activeMenu === text ? 'active activeListItem' : ''}`}>
                             {getIcon(text)}
                         </ListItemIcon>
                         <ListItemText primary={text}  />
                     </ListItemButton>
+                    </Link>
                     </ListItem>
                 ))}
                 </List>
@@ -121,7 +105,14 @@ const LandingPage = props => {
 
             </Drawer>
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                {renderContent()}
+            <Routes>
+                <Route path="/home" element={<div>Home Content</div>} />
+                <Route path="/analytics" element={<div>Analytics Content</div>} />
+                <Route path="/products" element={<ProductsContent />} />
+                <Route path="/products/screeningtool" element={<ScreeningTool />} />
+                <Route path="/reports" element={<div>Reports Content</div>} />
+                <Route path="/settings" element={<div>Settings Content</div>} />
+            </Routes> 
             </Box>
             </Box>
     </PageTemplate>

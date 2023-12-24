@@ -3,6 +3,7 @@ import { ThemeProvider } from '@emotion/react';
 import theme from './theme';
 import { BrowserRouter as Router, Routes, Route  } from 'react-router-dom';
 import LandingPage from "./pages/LandingPage";
+import ScreeningTool from './pages/ScreeningTool';
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
                     <Route path="/resetPassword/*" exact component={ResetPasswordPage} /> // This will be used to reset the user's password
                     <Route path="/activate/:verifyToken" component={ActivatePage} />  // This will be used for activating the user's account
                     */} 
-                    <Route path="/" element={<LandingPage />} />
+                    <Route path="/*" element={<LandingPage />} />
                 </Routes>
             </Router>
     </ThemeProvider>
