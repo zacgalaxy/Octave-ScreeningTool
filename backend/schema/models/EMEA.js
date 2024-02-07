@@ -1,4 +1,4 @@
 const mongoose = require('mongoose');
 const FinancialSchema = require('../financialSchema');
 
-module.exports = mongoose.model('Emerging Markets', FinancialSchema, 'Emerging Markets');
+module.exports = mongoose.model('EMEA', FinancialSchema, 'EMEA');
