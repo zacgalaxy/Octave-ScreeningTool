@@ -32,14 +32,14 @@ app.use(express.json());
  * based on the stock ticker of the document.
  */
 app.post('/api/insert-financial-data', async (req, res) => {
-    const filePath = '/Users/zhonghautang/Octave-ScreeningTool/backend/financial-data/AMER-Financials.xlsx';
+    const filePath = '/Users/zhonghautang/Octave-ScreeningTool/backend/financial-data/EMEA-Financials.xlsx';
     const excelData = readExcelFile(filePath);
 
     excelData.forEach(async (companyData) => {
         try {
             const financialData = {
                 ticker: companyData["Exchange:Ticker"],
-                name: companyData["Company name"],
+                companyName: companyData["Company name"],
                 industry: companyData["Industry"],
                 sector: "Financials",
                 geography: companyData["Geography"],
@@ -67,7 +67,7 @@ app.post('/api/insert-financial-data', async (req, res) => {
             }
 
             // Find existing document based on ticker and update if it exist else create a new document
-            const existingData = await AMERModel.findOneAndUpdate(
+            const existingData = await EMEAModel.findOneAndUpdate(
                 { ticker: financialData.ticker },
                 financialData,
                 { new: true, upsert: true }
@@ -129,6 +129,30 @@ app.get('/api/AMER-get-financial-data', async (req, res) => {
     }
 })
 
+/**
+ * API endpoint to return the mean and median for EPS Growth, Return on Capital and Debt to Equity ratio
+ */
+app.get('/api/AMER-mean-median', async (req, res) => {
+    try {
+        const pipeline = [
+            {
+              $group: {
+                _id: null,
+                epsGrowth: { $avg: '$financialRatios.epsGrowth' },
+                returnOnCapital: { $avg: '$financialRatios.returnOnCapital' },
+                debtToEquity: { $avg: '$financialRatios.debtToEquity' }
+                
+                // TODO: Add functionality to calculate median from database.
+              }
+            }
+        ];
+        const result = await AMERModel.aggregate(pipeline);
+        res.json(result);
+    } catch (error) {
+        console.error('Error occurred while aggregating data', error);
+        res.status(500).json({ error: 'An error occurred while processing your request' });
+    }
+})
 
 /**
  * Establish database connection and start the server locally.
