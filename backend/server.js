@@ -88,14 +88,11 @@ app.post('/api/insert-financial-data', async (req, res) => {
 app.get('/api/AMER-get-financial-data', async (req, res) => {
     try {
         // Adust this based on what the frontend allow user to filter by
-        const { geography, sector } = req.query;
-
-        // Construct a query object based on the provided parameters, this will filter based on the query
-        const query = {};
-        if (geography) query.geography = geography;
-        if (sector) query.sector = sector;
-
+        const query = buildQuery(req.query);
         const financialData = await AMERModel.find(query);
+        
+        const meanMedianResult = calcMeanMedian(financialData)
+        financialData.push({meanMedian: meanMedianResult});
 
         res.json({ success: true, data: financialData });
     } catch (error) {
@@ -110,17 +107,14 @@ app.get('/api/AMER-get-financial-data', async (req, res) => {
  * Example usage: localhost:8000/api/EMEA-get-financial-data?geography=Europe&sector=Financials
  *
  */
- app.get('/api/EMEA-get-financial-data', async (req, res) => {
+app.get('/api/EMEA-get-financial-data', async (req, res) => {
     try {
         // Adust this based on what the frontend allow user to filter by
-        const { geography, sector } = req.query;
-
-        // Construct a query object based on the provided parameters, this will filter based on the query
-        const query = {};
-        if (geography) query.geography = geography;
-        if (sector) query.sector = sector;
-
+        const query = buildQuery(req.query);
         const financialData = await EMEAModel.find(query);
+        
+        const meanMedianResult = calcMeanMedian(financialData)
+        financialData.push({meanMedian: meanMedianResult});
 
         res.json({ success: true, data: financialData });
     } catch (error) {
@@ -130,29 +124,92 @@ app.get('/api/AMER-get-financial-data', async (req, res) => {
 })
 
 /**
- * API endpoint to return the mean and median for EPS Growth, Return on Capital and Debt to Equity ratio
+ * Function to calculate mean and median based on the financial data provided
+ * 
+ * @param {The financial data provided} financialData 
+ * @returns {Mean and median result}
  */
-app.get('/api/AMER-mean-median', async (req, res) => {
-    try {
-        const pipeline = [
-            {
-              $group: {
-                _id: null,
-                epsGrowth: { $avg: '$financialRatios.epsGrowth' },
-                returnOnCapital: { $avg: '$financialRatios.returnOnCapital' },
-                debtToEquity: { $avg: '$financialRatios.debtToEquity' }
-                
-                // TODO: Add functionality to calculate median from database.
-              }
-            }
-        ];
-        const result = await AMERModel.aggregate(pipeline);
-        res.json(result);
-    } catch (error) {
-        console.error('Error occurred while aggregating data', error);
-        res.status(500).json({ error: 'An error occurred while processing your request' });
+function calcMeanMedian(financialData) {
+    const epsGrowthValues = []
+    const returnOnCapitalValues = [];
+    const debtToEquityValues = [];
+
+    financialData.forEach(data => {
+        // Check if the financial ratios are numbers and not null or undefined
+        if (!isNaN(data.financialRatios.epsGrowth)) {
+            epsGrowthValues.push(data.financialRatios.epsGrowth);
+        }
+        if (!isNaN(data.financialRatios.returnOnCapital)) {
+            returnOnCapitalValues.push(data.financialRatios.returnOnCapital);
+        }
+        if (!isNaN(data.financialRatios.debtToEquity)) {
+            debtToEquityValues.push(data.financialRatios.debtToEquity);
+        }
+    });
+
+    const meanResult = {
+        epsGrowth: calculateMean(epsGrowthValues),
+        returnOnCapital: calculateMean(returnOnCapitalValues),
+        debtToEquity: calculateMean(debtToEquityValues)
     }
-})
+
+    const medianResult = {
+        epsGrowth: calculateMedian(epsGrowthValues),
+        returnOnCapital: calculateMedian(returnOnCapitalValues),
+        debtToEquity: calculateMedian(debtToEquityValues)
+    };
+
+    return {meanResult, medianResult};
+}
+
+/**
+ * Function to calculate mean value from an array of numeric values
+ * 
+ * @param {Array of numeric values} values 
+ * @returns {Mean value}
+ */
+ function calculateMean(values) {
+    if (values.length === 0) {
+        return "NA";
+    }
+    const sum = values.reduce((acc, val) => acc + val, 0);
+    return sum / values.length;
+}
+
+/**
+ * Function to calculate median value from an array of numeric values
+ * 
+ * @param {Array of numeric values} values 
+ * @returns {Median value}
+ */
+ function calculateMedian(values) {
+    if (values.length === 0) {
+        return "NA";
+    }
+    const sortedValues = values.sort((a, b) => a - b);
+    const middleIndex = Math.floor(sortedValues.length / 2);
+    if (sortedValues.length % 2 === 0) {
+        return (sortedValues[middleIndex - 1] + sortedValues[middleIndex]) / 2;
+    } else {
+        return sortedValues[middleIndex];
+    }
+}
+
+/**
+ * Function to build the filter query for the database
+ * 
+ * @param {The geography} geography 
+ * @param {Sector of the company} sector 
+ * @returns 
+ */
+function buildQuery(inputQuery) {
+    const { geography, sector } = inputQuery;
+
+    const query = {};
+    if (geography) query.geography = geography;
+    if (sector) query.sector = sector;
+    return query;
+}
 
 /**
  * Establish database connection and start the server locally.
