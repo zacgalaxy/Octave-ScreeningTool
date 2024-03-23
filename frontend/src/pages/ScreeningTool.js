@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Typography, Switch, Grid, Slider, FormControlLabel, ToggleButtonGroup, ToggleButton, useTheme, Button, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
+import { Container, Typography, Switch, Select,MenuItem,Box, Grid, Slider, FormControlLabel, ToggleButtonGroup, ToggleButton, useTheme, Button, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 
 const formatSliderValue = (value) => {
     if (value >= 1e9) {
@@ -108,7 +108,11 @@ const ScreeningTool = () => {
             ))}
          <Button variant="contained" color="primary">
                 Search
-            </Button> 
+            </Button>
+            
+           < MetricToggleButton />
+        
+            
             <Paper sx={{ marginTop: theme.spacing(3), width: '100%', overflowX: 'auto' }}>
                 <Table>
                     <TableHead>
@@ -129,5 +133,76 @@ const ScreeningTool = () => {
         </Container>
     );
 };
+const MetricToggleButton = () => {
+    const theme = useTheme();
+    const [selectedMetric, setSelectedMetric] = useState('');
+    const [value, setValue] = useState('');
+
+    const handleMetricChange = (event) => {
+        setSelectedMetric(event.target.value);
+        setValue('none'); // Reset value to 'none' whenever the metric changes
+    };
+
+    const handleValueChange = (event, newValue) => {
+        if (newValue !== null) { // Prevent no selection
+            setValue(newValue);
+        }
+    };
+
+    const metrics = [
+        { name: 'Select Metric', key: '' },
+        { name: 'EPS Growth', key: 'epsGrowth' },
+        { name: 'ROIC', key: 'roic' },
+        { name: 'DTE Growth', key: 'dteGrowth' },
+        { name: 'None', key: 'none' },
+    ];
+
+    const options = ['Mean', 'Median'];
+
+    return (
+        <div>
+            <Container sx={{ margin: theme.spacing(2) }}>
+                <Typography variant="h6" component="div" sx={{ marginBottom: theme.spacing(2) }}>
+                    Select Metric and Value
+                </Typography>
+                {/* Dropdown Menu for Metric Selection */}
+                <Box display="flex" alignItems="center">
+                <Select
+                    value={selectedMetric}
+                    onChange={handleMetricChange}
+                    displayEmpty
+                    inputProps={{ 'aria-label': 'Select Metric' }}
+                    sx={{ minWidth: 120, marginRight: theme.spacing(2) }}
+                >
+                    {metrics.map((metric) => (
+                        <MenuItem key={metric.key} value={metric.key}>
+                            {metric.name}
+                        </MenuItem>
+                    ))}
+                </Select>
+
+                {/* Toggle Buttons for Mean and Median - shown only if a specific metric is selected */}
+                {selectedMetric && selectedMetric !== 'none' && (
+                    <ToggleButtonGroup
+                        value={value}
+                        exclusive
+                        onChange={handleValueChange}
+                        size="small"
+                        sx={{ display: 'flex' }}
+                    >
+                        {options.map((option) => (
+                            <ToggleButton key={option} value={option.toLowerCase()} sx={{ flexGrow: 1, m: 0.5, justifyContent: 'center' }}>
+                                {option}
+                            </ToggleButton>
+                        ))}
+                    </ToggleButtonGroup>
+                
+                )}
+                </Box>
+            </Container>
+        </div>
+    );
+};
+  
 
 export default ScreeningTool;
