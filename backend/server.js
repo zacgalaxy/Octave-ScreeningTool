@@ -32,7 +32,7 @@ app.use(express.json());
  * based on the stock ticker of the document.
  */
 app.post('/api/insert-financial-data', async (req, res) => {
-    const filePath = '/Users/zhonghautang/Octave-ScreeningTool/backend/financial-data/EMEA-Financials.xlsx';
+    const filePath = '/Users/zhonghautang/Octave-ScreeningTool/backend/financial-data/AMER-Financials.xlsx';
     const excelData = readExcelFile(filePath);
 
     excelData.forEach(async (companyData) => {
@@ -67,7 +67,7 @@ app.post('/api/insert-financial-data', async (req, res) => {
             }
 
             // Find existing document based on ticker and update if it exist else create a new document
-            const existingData = await EMEAModel.findOneAndUpdate(
+            const existingData = await AMERModel.findOneAndUpdate(
                 { ticker: financialData.ticker },
                 financialData,
                 { new: true, upsert: true }
